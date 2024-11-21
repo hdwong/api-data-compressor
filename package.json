@@ -1,6 +1,6 @@
 {
   "name": "api-data-compressor",
-  "version": "1.0.4",
+  "version": "1.0.5",
   "description": "API Data Compressor",
   "type": "commonjs",
   "main": "dist/index.js",

@@ -72,9 +72,9 @@ The `compress` function will return an object with two properties: `struct` and 
 {"struct":[{"id":"n","name":"s","address":{"street":"s","city":"s","state":"s","zip":"s"},"phone":"s","email":"s"}],"data":[[1,"John Doe",["123 Main St","Springfield","IL","62701"],"555-555-5555","john.doe@google.com"],[2,"Jane Smith",["456 Elm St","Springfield","IL","62701"],"555-555-5555","jane.smith@google.com"],[3,"Bob Johnson",["789 Oak St","Springfield","IL","62701"],"555-555-5555","bob.johnson@google.com"],[4,"Alice Brown",["1012 Pine St","Springfield","IL","62701"],"555-555-5555","alice.brown@google.com"]]}
 ```
 
-In this example, the original size of the JSON data is _668 bytes_, andp the compressed size is _520 bytes_, which is a _22%_ reduction in size. The actual reduction in size is even more pronounced in larger data sets.
+In this example, the original size of the JSON data is _668 bytes_, and the compressed size is _520 bytes_, which is a _22%_ reduction in size. The actual reduction is even more pronounced in larger datasets.
 
-> **Note:** When the data is very small or data with non-repeating structures, the compressed data may be larger than the original data because of the compressed data will preserve the structure of the original data.
+> **Note:** When the data is very small or consists of non-repeating structures, the compressed data may be larger than the original data because of the compressed data will preserve the structure of the original data.
 
 ### Decompressing Data
 
