@@ -1,14 +1,19 @@
 {
   "name": "api-data-compressor",
-  "version": "1.0.5",
+  "version": "1.0.11",
   "description": "API Data Compressor",
-  "type": "commonjs",
+  "keywords": [
+    "api",
+    "json",
+    "compressor"
+  ],
   "main": "dist/index.js",
   "types": "types/index.d.ts",
   "exports": {
     ".": {
       "types": "./types/index.d.ts",
-      "require": "./dist/index.js"
+      "require": "./dist/index.js",
+      "import": "./dist/index.esm.js"
     }
   },
   "scripts": {
@@ -26,5 +31,13 @@
     "esbuild": "^0.24.0",
     "esbuild-node-externals": "^1.15.0",
     "typescript": "^5.6.3"
+  },
+  "files": [
+    "dist",
+    "types"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/hdwong/api-data-compressor.git"
   }
 }

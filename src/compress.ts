@@ -1,4 +1,6 @@
-import { forEach, get, set } from "lodash";
+import get from "lodash/get";
+import set from "lodash/set";
+import forEach from "lodash/forEach";
 import { getType, isComplexThan } from "./helper";
 import type { TCompressedData } from "./types";
 

@@ -1,4 +1,4 @@
-import { get } from "lodash";
+import get from "lodash/get";
 import { isComplexThan, isObjectOrArray } from "./helper";
 import type { TCompressedData } from "./types";
 
@@ -8,6 +8,10 @@ import type { TCompressedData } from "./types";
  * @returns any - the original JSON data
  */
 export function decompress<T = any>(data: TCompressedData): T {
+  if (typeof data !== 'object' || typeof data.struct === 'undefined' || typeof data.data === 'undefined') {
+    throw new Error('Invalid compressed data');
+  }
+
   const struct = data.struct;
   const result = data.data;
 
