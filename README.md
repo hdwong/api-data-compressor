@@ -136,7 +136,7 @@ The `decompress` function will return the original JSON data from the compressed
   <th>Compression Ratio</th>
 </tr>
 <tr>
-  <td>A String</td>
+  <td>String</td>
   <td>
 
 ```json
@@ -158,7 +158,7 @@ The `decompress` function will return the original JSON data from the compressed
   </td>
 </tr>
 <tr>
-  <td>An Array</td>
+  <td>An array</td>
   <td>
 
 ```json
@@ -179,7 +179,7 @@ The `decompress` function will return the original JSON data from the compressed
   </td>
 </tr>
 <tr>
-  <td>An Object</td>
+  <td>An object</td>
   <td>
 
 ```json
@@ -204,7 +204,7 @@ The `decompress` function will return the original JSON data from the compressed
   </td>
 </tr>
 <tr>
-  <td>Complex Object</td>
+  <td>Complex object</td>
   <td>
 
 ```json
@@ -230,7 +230,10 @@ The `decompress` function will return the original JSON data from the compressed
   "struct": {
     "id": "n",
     "name": "s",
-    "address": { "street": "s", "city": "s", "state": "s", "zip": "s" },
+    "address": {
+      "street": "s", "city": "s",
+      "state": "s", "zip": "s"
+    },
     "phone": "s",
     "email": "s"
   },
@@ -252,7 +255,7 @@ The `decompress` function will return the original JSON data from the compressed
   </td>
 </tr>
 <tr>
-  <td>Array of Objects</td>
+  <td>Array of objects</td>
   <td>
 
 ```json
@@ -337,6 +340,46 @@ The `decompress` function will return the original JSON data from the compressed
     Original: 926 bytes<br>
     Compressed: 608 bytes<br>
     Ratio: 65.66%
+  </td>
+</tr>
+<tr>
+  <td>Array of objects with <br>different structures</td>
+  <td>
+
+```json
+[
+  {a: 1, b: 2 },
+  {b: 3, c: 4 },
+  {c: 5, d: 6 },
+  {d: 6, b: 3 },
+  {c: 4, a: 1 },
+]
+```
+
+  </td>
+  <td>
+
+```json
+{
+  "struct": [{
+    "a": "n", "b": "n",
+    "c": "n", "d": "n"
+  }],
+  "data": [
+    [1, 2],
+    [null, 3, 4],
+    [null, null, 5, 6],
+    [null, 3, null, 6],
+    [1, null, 4]
+  ]
+}
+```
+
+  </td>
+  <td>
+    Original: 71 bytes<br>
+    Compressed: 115 bytes<br>
+    Ratio: 161.97%
   </td>
 </tr>
 </table>
