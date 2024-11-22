@@ -91,7 +91,8 @@ export function compress(value: any): TCompressedData {
       currentStruct = type;
       if (!existsStruct) {
         set(struct, path, currentStruct);
-      } else if (isComplexThan(type, existsStruct) === -1) {
+      } else if (path.length && isComplexThan(type, existsStruct) === -1) {
+        // if path is not root
         currentStruct = existsStruct;
       }
       currentResult = value;

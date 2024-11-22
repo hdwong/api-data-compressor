@@ -348,11 +348,11 @@ The `decompress` function will return the original JSON data from the compressed
 
 ```json
 [
-  {a: 1, b: 2 },
-  {b: 3, c: 4 },
-  {c: 5, d: 6 },
-  {d: 6, b: 3 },
-  {c: 4, a: 1 },
+  { a: 1, b: 2 },
+  { b: 3, c: 4 },
+  { c: 5, d: 6 },
+  { d: 6, b: 3 },
+  { c: 4, a: 1 },
 ]
 ```
 
