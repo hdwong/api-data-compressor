@@ -10,7 +10,7 @@ import type { TCompressedData } from "./types";
  * @returns TCompressedData - compressed data
  */
 export function compress(value: any): TCompressedData {
-  const struct = {};
+  const struct: any = undefined;
 
   const _compress = (value: any, path: Array<string | number> = []) => {
     const existsStruct = path.length ? get(struct, path) : struct;

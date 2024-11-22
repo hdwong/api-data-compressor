@@ -69,12 +69,52 @@ const compressedData = compress(data);
 The `compress` function will return an object with two properties: `struct` and `data`. The `struct` property contains the structure of the original JSON data, and the `data` property contains the transformed data.
 
 ```json
-{"struct":[{"id":"n","name":"s","address":{"street":"s","city":"s","state":"s","zip":"s"},"phone":"s","email":"s"}],"data":[[1,"John Doe",["123 Main St","Springfield","IL","62701"],"555-555-5555","john.doe@google.com"],[2,"Jane Smith",["456 Elm St","Springfield","IL","62701"],"555-555-5555","jane.smith@google.com"],[3,"Bob Johnson",["789 Oak St","Springfield","IL","62701"],"555-555-5555","bob.johnson@google.com"],[4,"Alice Brown",["1012 Pine St","Springfield","IL","62701"],"555-555-5555","alice.brown@google.com"]]}
+{
+  "struct": [
+    {
+      "id": "n",
+      "name": "s",
+      "address": { "street": "s", "city": "s", "state": "s", "zip": "s" },
+      "phone": "s",
+      "email": "s"
+    }
+  ],
+  "data": [
+    [
+      1,
+      "John Doe",
+      ["123 Main St", "Springfield", "IL", "62701"],
+      "555-555-5555",
+      "john.doe@google.com"
+    ],
+    [
+      2,
+      "Jane Smith",
+      ["456 Elm St", "Springfield", "IL", "62701"],
+      "555-555-5555",
+      "jane.smith@google.com"
+    ],
+    [
+      3,
+      "Bob Johnson",
+      ["789 Oak St", "Springfield", "IL", "62701"],
+      "555-555-5555",
+      "bob.johnson@google.com"
+    ],
+    [
+      4,
+      "Alice Brown",
+      ["1012 Pine St", "Springfield", "IL", "62701"],
+      "555-555-5555",
+      "alice.brown@google.com"
+    ]
+  ]
+}
 ```
 
 In this example, the original size of the JSON data is _668 bytes_, and the compressed size is _520 bytes_, which is a _22%_ reduction in size. The actual reduction is even more pronounced in larger datasets.
 
-> **Note:** When the data is very small or consists of non-repeating structures, the compressed data may be larger than the original data because of the compressed data will preserve the structure of the original data.
+> **Note:** When the data is very small or consists of non-repeating structures, the compressed data may be larger than the original data because of the compressed data will preserve the structure of the original data. See the [examples](#other-examples) below.
 
 ### Decompressing Data
 
@@ -85,6 +125,221 @@ const originalData = decompress(compressedData);
 ```
 
 The `decompress` function will return the original JSON data from the compressed data returned by the `compress` function.
+
+## Other Examples
+
+<table>
+<tr>
+  <th>Case</th>
+  <th>Original Data</th>
+  <th>Compressed Data</th>
+  <th>Compression Ratio</th>
+</tr>
+<tr>
+  <td>A String</td>
+  <td>
+
+```json
+"Hello, World!"
+```
+
+  </td>
+  <td>
+
+```json
+{ "struct": "s", "data": "Hello, World!" }
+```
+
+  </td>
+  <td>
+  Original: 15 bytes<br>
+  Compressed: 37 bytes<br>
+  Ratio: 246.67%
+  </td>
+</tr>
+<tr>
+  <td>An Array</td>
+  <td>
+
+```json
+[ 1, 2, 3, 4, 5]
+```
+
+  </td>
+  <td>
+
+```json
+{ "struct": ["n"], "data": [1, 2, 3, 4, 5] }
+```
+  </td>
+  <td>
+  Original: 11 bytes<br>
+  Compressed: 35 bytes<br>
+  Ratio: 218.18%
+  </td>
+</tr>
+<tr>
+  <td>An Object</td>
+  <td>
+
+```json
+{ "id": 1, "name": "John Doe" }
+```
+
+  </td>
+  <td>
+
+```json
+{
+  "struct": { "id": "n", "name": "s" },
+  "data": [1, "John Doe"]
+}
+```
+
+  </td>
+  <td>
+  Original: 26 bytes<br>
+  Compressed: 54 bytes<br>
+  Ratio: 207.69%
+  </td>
+</tr>
+<tr>
+  <td>Complex Object</td>
+  <td>
+
+```json
+{
+  "id": 1,
+  "name": "John Doe",
+  "address": {
+    "street": "123 Main St",
+    "city": "Springfield",
+    "state": "IL",
+    "zip": "62701"
+  },
+  "phone": "555-555-5555",
+  "email": "john.doe@gmail.com"
+}
+```
+
+  </td>
+  <td>
+
+```json
+{
+  "struct": {
+    "id": "n",
+    "name": "s",
+    "address": { "street": "s", "city": "s", "state": "s", "zip": "s" },
+    "phone": "s",
+    "email": "s"
+  },
+  "data": [
+    1,
+    "John Doe",
+    ["123 Main St", "Springfield", "IL", "62701"],
+    "555-555-5555",
+    "john.doe@gmail.com"
+  ]
+}
+```
+
+  </td>
+  <td>
+    Original: 161 bytes<br>
+    Compressed: 215 bytes<br>
+    Ratio: 133.54%
+  </td>
+</tr>
+<tr>
+  <td>Array of Objects</td>
+  <td>
+
+```json
+[
+  { "id": 1, "name": "John Doe" },
+  { "id": 2, "name": "Jane Smith" },
+  { "id": 3, "name": "Bob Johnson" },
+  { "id": 4, "name": "Alice Brown" },
+  { "id": 5, "name": "Charlie Davis" },
+  { "id": 6, "name": "Eve Wilson" },
+  { "id": 7, "name": "Grace Lee" },
+  { "id": 8, "name": "Henry Young" },
+  { "id": 9, "name": "Ivy King" },
+  { "id": 10, "name": "Jack Wright" },
+  { "id": 11, "name": "Kelly Lopez" },
+  { "id": 12, "name": "Morgan Hill" },
+  { "id": 13, "name": "Nora Green" },
+  { "id": 14, "name": "Oscar Adams" },
+  { "id": 15, "name": "Penny Baker" },
+  { "id": 16, "name": "Quinn Carter" },
+  { "id": 17, "name": "Riley Clark" },
+  { "id": 18, "name": "Sammy Davis" },
+  { "id": 19, "name": "Terry Evans" },
+  { "id": 20, "name": "Ursula Fisher" },
+  { "id": 21, "name": "Vivian Gray" },
+  { "id": 22, "name": "Walter Harris" },
+  { "id": 23, "name": "Xavier Irwin" },
+  { "id": 24, "name": "Yvonne Johnson" },
+  { "id": 25, "name": "Zachary King" },
+  { "id": 26, "name": "Amanda Lee" },
+  { "id": 27, "name": "Brian Miller" },
+  { "id": 28, "name": "Cindy Nelson" },
+  { "id": 29, "name": "David Olson" },
+  { "id": 30, "name": "Ella Peterson" },
+]
+```
+
+  </td>
+  <td>
+
+```json
+{
+  "struct": [{ "id": "n", "name": "s" }],
+  "data": [
+    [1, "John Doe"],
+    [2, "Jane Smith"],
+    [3, "Bob Johnson"],
+    [4, "Alice Brown"],
+    [5, "Charlie Davis"],
+    [6, "Eve Wilson"],
+    [7, "Grace Lee"],
+    [8, "Henry Young"],
+    [9, "Ivy King"],
+    [10, "Jack Wright"],
+    [11, "Kelly Lopez"],
+    [12, "Morgan Hill"],
+    [13, "Nora Green"],
+    [14, "Oscar Adams"],
+    [15, "Penny Baker"],
+    [16, "Quinn Carter"],
+    [17, "Riley Clark"],
+    [18, "Sammy Davis"],
+    [19, "Terry Evans"],
+    [20, "Ursula Fisher"],
+    [21, "Vivian Gray"],
+    [22, "Walter Harris"],
+    [23, "Xavier Irwin"],
+    [24, "Yvonne Johnson"],
+    [25, "Zachary King"],
+    [26, "Amanda Lee"],
+    [27, "Brian Miller"],
+    [28, "Cindy Nelson"],
+    [29, "David Olson"],
+    [30, "Ella Peterson"]
+  ]
+}
+
+```
+
+  </td>
+  <td>
+    Original: 926 bytes<br>
+    Compressed: 608 bytes<br>
+    Ratio: 65.66%
+  </td>
+</tr>
+</table>
 
 ## License
 MIT
