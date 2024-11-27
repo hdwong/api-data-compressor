@@ -78,17 +78,26 @@ export function compress(value: any): TCompressedData {
       currentResult = _result;
     } else if (type === 'a') {
       // array
+      let k: string | number = 0;
+      let isMixedObject = false;
       if (!structType) {
         // if struct is undefined / null or primitive type, set struct as an empty array
         struct = [];
       } else if (structType === 'o') {
         // if exists struct is object, add ZERO_KEY_INDEX to struct, convert structType to 'oa'
+        isMixedObject = true;
         struct = { ...struct, [ZERO_KEY_INDEX]: undefined };
         structType = 'oa';
+        k = ZERO_KEY_INDEX;
+      } else if (structType === 'oa') {
+        isMixedObject = true;
+        k = ZERO_KEY_INDEX;
+      } else if (structType === 'ao') {
+        // if exists struct is array of object, convert structType to 'oa'
+        structType = 'a';
+        k = ZERO_KEY_INDEX;
       }
 
-      const isMixedObject = structType === 'oa';  // check if is a mixed object
-      const k = isMixedObject ? ZERO_KEY_INDEX : 0;
       const _array: Array<any> = [];
       if (isMixedObject) {
         // add a sign to the first element of result
