@@ -1,5 +1,4 @@
-import get from "lodash/get";
-import { isComplexThan, isObjectOrArray } from "./helper";
+import { getStructType, isComplexThan, isEmptyObject, isObjectOrArray, ZERO_KEY_INDEX } from "./helper";
 import type { TCompressedData } from "./types";
 
 /**
@@ -12,39 +11,59 @@ export function decompress<T = any>(data: TCompressedData): T {
     throw new Error('Invalid compressed data');
   }
 
-  const struct = data.struct;
-  const result = data.data;
-
-  const _decompress = (value: any, path: Array<string | number> = []) => {
-    const currentStruct = path.length ? get(struct, path) : struct;
-    const currentResult = value;
-    if (isObjectOrArray(currentStruct)) {
-      const compare = isComplexThan(currentResult, currentStruct);
+  const _decompress = (value: any, struct: any) => {
+    // const currentStruct = path.length ? get(struct, path) : struct;
+    if (isObjectOrArray(struct)) {
+      const compare = isComplexThan(value, struct);
       if (compare <= 0) {
         // if current value is less complex than struct, return directly
-        return currentResult;
+        return value;
       }
       // if current value is object or array
-      let _result: Array<any> | Record<string, any>;
-      if (Array.isArray(currentStruct)) {
-        // array, iterate and generate result array
-        const elPath = [ ...path, 0 ];
-        _result = currentResult.map((v: any) => _decompress(v, elPath));
-      } else {
-        // object, iterate and generate result object
-        _result = {};
-        Object.keys(currentStruct).forEach((k, i) => {
-          if (typeof currentResult[i] === 'undefined' || currentResult[i] === null) {
+      let structType = getStructType(struct);
+      let isMixedObject = false;
+      if (structType === 'ao' || structType === 'oa') {
+        // mixed object, check first element of value
+        isMixedObject = true;
+        const first = value[0];
+        const firstIsEmptyObject = isEmptyObject(first);
+        structType = firstIsEmptyObject ? structType[1] : structType[0];
+        if (firstIsEmptyObject) {
+          // trim first element
+          value.shift();
+        }
+      }
+      if (structType === 'o') {
+        // object
+        const _result: Record<string, any> = {};
+        let zeroKeyIndexOffset = 0;
+        Object.keys(struct).forEach((k, i) => {
+          if (isMixedObject && k === ZERO_KEY_INDEX) {
+            zeroKeyIndexOffset = 1;
             return;
           }
-          (_result as Record<string, any>)[k] = _decompress(currentResult[i], [ ...path, k ]);
+          if (typeof value[i - zeroKeyIndexOffset] === 'undefined' || value[i - zeroKeyIndexOffset] === null) {
+            return;
+          }
+          _result[k] = _decompress(value[i - zeroKeyIndexOffset], struct[k]);
         });
+        return _result;
+      } else if (structType === 'a') {
+        // array
+        const _result: Array<any> = [];
+        value.forEach((v: any, i: number) => {
+          _result[i] = _decompress(v, struct[isMixedObject ? ZERO_KEY_INDEX : 0]);
+        });
+        return _result;
+      } else {
+        // unexpected struct type
+        return null;
       }
-      return _result;
-    } else if ('bns'.indexOf(currentStruct) !== -1) {
+    } else if ('bns'.indexOf(struct) !== -1) {
       // base type, bool, number, string
-      return currentResult;
+      return value;
     }
   };
-  return _decompress(result);
+
+  return _decompress(data.data, data.struct);
 }

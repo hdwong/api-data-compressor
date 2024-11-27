@@ -1,7 +1,7 @@
 {
   "compilerOptions": {
+    "outDir": "tests",
     "rootDir": "src",
-    "noEmitOnError": true,
 
     "lib": ["DOM", "DOM.Iterable", "ES2020"],
     "target": "ES2020",
@@ -22,5 +22,5 @@
     "typeRoots": ["./node_modules/@types"],
     "strict": true
   },
-  "include": ["src"]
+  "include": ["src", "tests"]
 }

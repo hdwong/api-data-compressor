@@ -348,11 +348,11 @@ The `decompress` function will return the original JSON data from the compressed
 
 ```json
 [
-  { a: 1, b: 2 },
-  { b: 3, c: 4 },
-  { c: 5, d: 6 },
-  { d: 6, b: 3 },
-  { c: 4, a: 1 },
+  { "a": 1, "b": 2 },
+  { "b": 3, "c": 4 },
+  { "c": 5, "d": 6 },
+  { "d": 6, "b": 3 },
+  { "c": 4, "a": 1 },
 ]
 ```
 
@@ -380,6 +380,54 @@ The `decompress` function will return the original JSON data from the compressed
     Original: 71 bytes<br>
     Compressed: 115 bytes<br>
     Ratio: 161.97%
+  </td>
+</tr>
+<tr>
+  <td>Array with nested objects</td>
+  <td>
+
+```json
+[
+  1,
+  {"foo":"bar"},
+  [2, [{"foo":"bar"}, 4], 5],
+  6,
+  [{"foo":[{"a": 1, "b": 2}, [1, 2, 3]]}]
+]
+```
+
+  </td>
+  <td>
+
+```json
+{
+  "struct": [
+    {
+      "foo": "s",
+      "": {
+        "": { "foo": "s" },
+        "foo": [ { "a": "n", "b": "n", "": "n" } ]
+      }
+    }
+  ],
+  "data": [
+    1,
+    [ "bar" ],
+    [ {}, 2, [ [ "bar" ], 4 ], 5 ],
+    6,
+    [
+      {},
+      [ {}, [ [ 1, 2 ], [ {}, 1, 2, 3 ] ] ]
+    ]
+  ]
+}
+```
+
+  </td>
+  <td>
+    Original: 77 bytes<br>
+    Compressed: 136 bytes<br>
+    Ratio: 176.62%
   </td>
 </tr>
 </table>
