@@ -51,9 +51,11 @@ export function decompress<T = any>(data: TCompressedData): T {
       } else if (structType === 'a') {
         // array
         const _result: Array<any> = [];
-        value.forEach((v: any, i: number) => {
-          _result[i] = _decompress(v, struct[isMixedObject ? ZERO_KEY_INDEX : 0]);
-        });
+        if (value.length) {
+          value.forEach((v: any, i: number) => {
+            _result[i] = _decompress(v, struct[isMixedObject ? ZERO_KEY_INDEX : 0]);
+          });
+        }
         return _result;
       } else {
         // unexpected struct type
