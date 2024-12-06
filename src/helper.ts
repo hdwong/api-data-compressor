@@ -23,7 +23,10 @@ export function getType(value: any) {
   } else if (t === 'string') {
     return 's';
   }
-  return Array.isArray(value) ? 'a' : 'o';
+  if (Array.isArray(value)) {
+    return value.length ? 'a' : false;
+  }
+  return Object.keys(value).length ? 'o' : false;
 };
 
 /**
