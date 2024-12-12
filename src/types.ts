@@ -8,3 +8,10 @@ export type TCompressedData = {
    */
   data: any;
 }
+
+export type TCompressOptions = {
+  /**
+   * whether to convert empty array or object to null, default is false
+   */
+  emptyCollectionToNull?: boolean;
+}

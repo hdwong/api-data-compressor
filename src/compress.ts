@@ -1,14 +1,18 @@
 import { getStructType, getType, isComplexThan, mergeStruct, ZERO_KEY_INDEX } from "./helper";
-import type { TCompressedData } from "./types";
+import type { TCompressedData, TCompressOptions } from "./types";
 
 /**
  * Compress value
  * @param value any - API response JSON data
  * @returns TCompressedData - compressed data
  */
-export function compress(value: any): TCompressedData {
+export function compress(value: any, options?: TCompressOptions ): TCompressedData {
+  let emptyCollectionToNull = false;
+  if (options && typeof options.emptyCollectionToNull === 'boolean') {
+    emptyCollectionToNull = options.emptyCollectionToNull;
+  }
   const _compress = (value: any, struct: any = undefined) => {
-    const type = getType(value);
+    const type = getType(value, emptyCollectionToNull);
     if (!type) {
       // not supported type
       return [ false, value ];
@@ -86,7 +90,7 @@ export function compress(value: any): TCompressedData {
       } else if (structType === 'o') {
         // if exists struct is object, add ZERO_KEY_INDEX to struct, convert structType to 'oa'
         isMixedObject = true;
-        struct = { ...struct, [ZERO_KEY_INDEX]: undefined };
+        struct = { ...struct, [ZERO_KEY_INDEX]: false };
         structType = 'oa';
         k = ZERO_KEY_INDEX;
       } else if (structType === 'oa') {

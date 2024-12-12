@@ -10,7 +10,7 @@ export const ZERO_KEY_INDEX = ''; // may be changed to other value, like '00'
  *    'o' if value is object,
  *    false if value is not supported type or null / undefined
  */
-export function getType(value: any) {
+export function getType(value: any, emptyCollectionToNull = false) {
   const t = typeof value;
   if (value === null || [ 'undefined', 'symbol', 'function' ].includes(t)) {
     // null / undefined / symbol / function are not supported yet
@@ -24,9 +24,17 @@ export function getType(value: any) {
     return 's';
   }
   if (Array.isArray(value)) {
-    return value.length ? 'a' : false;
+    if (! value.length && emptyCollectionToNull) {
+      // empty array will be converted to null
+      return false;
+    }
+    return 'a';
   }
-  return Object.keys(value).length ? 'o' : false;
+  if (! Object.keys(value).length && emptyCollectionToNull) {
+    // empty object will be converted to null
+    return false;
+  }
+  return 'o';
 };
 
 /**
