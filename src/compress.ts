@@ -37,7 +37,7 @@ export function compress(value: any, options?: TCompressOptions ): TCompressedDa
         struct = {};
       } else if (structType === 'a') {
         // if exists struct is array, convert to object, convert structType to 'ao'
-        struct = { [ZERO_KEY_INDEX]: struct[0] };
+        struct = { [ZERO_KEY_INDEX]: struct[0] || false };
         structType = 'ao';
       }
       const _object: any = {};
@@ -51,7 +51,7 @@ export function compress(value: any, options?: TCompressOptions ): TCompressedDa
         const compare = isComplexThan(elStruct, struct[k]);
         if (compare === 2) {
           struct[k] = mergeStruct(struct[k], elStruct);
-        } else if (compare === 1 || typeof struct[k] === 'undefined') {
+        } else if (compare === 1 || typeof struct[k] === 'undefined' || !struct[k]) {
           struct[k] = elStruct;
         }
         _object[k] = elResult;
@@ -117,7 +117,7 @@ export function compress(value: any, options?: TCompressOptions ): TCompressedDa
         const compare = isComplexThan(elStruct, struct[k]);
         if (compare === 2) {
           struct[k] = mergeStruct(struct[k], elStruct);
-        } else if (compare === 1 || typeof struct[k] === 'undefined') {
+        } else if (compare === 1 || typeof struct[k] === 'undefined' || !struct[k]) {
           struct[k] = elStruct;
         }
         _array[isMixedObject ? (i + 1) : i] = elResult;
