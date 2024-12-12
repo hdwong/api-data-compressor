@@ -1,6 +1,11 @@
 #!/usr/bin/env node
 const esbuild = require('esbuild');
 const { nodeExternalsPlugin } = require('esbuild-node-externals');
+const { readFileSync } = require('fs');
+
+// read package.json
+const pkg = JSON.parse(readFileSync('./package.json', 'utf8'));
+const version = pkg.version;
 
 const config = {
   bundle: true,
@@ -8,6 +13,9 @@ const config = {
   sourcemap: false,
   target: 'es2020',
   plugins: [nodeExternalsPlugin()],
+  define: {
+    'process.env.VERSION': JSON.stringify(version), // inject version
+  }
 }
 
 const builds = [
