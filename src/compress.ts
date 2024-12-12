@@ -32,13 +32,21 @@ export function compress(value: any, options?: TCompressOptions ): TCompressedDa
     let currentResult: any;
     if (type === 'o') {
       // object
+      let oldStruct = undefined;
       if (!structType) {
         // if struct is undefined / null or primitive type, set struct as an empty object
         struct = {};
       } else if (structType === 'a') {
         // if exists struct is array, convert to object, convert structType to 'ao'
-        struct = { [ZERO_KEY_INDEX]: struct[0] || false };
+        oldStruct = struct.slice(); // backup old struct
+        if (oldStruct.length === 0) {
+          oldStruct[0] = false;
+        }
+        struct = {};
         structType = 'ao';
+      } else if (structType === 'ao') {
+        oldStruct = struct.slice(); // backup old struct
+        struct = struct[1];
       }
       const _object: any = {};
       for (const k in value) {
@@ -78,7 +86,11 @@ export function compress(value: any, options?: TCompressOptions ): TCompressedDa
           _result.push(null);
         }
       }
-      currentStruct = struct;
+      if (oldStruct) {
+        currentStruct = [ oldStruct[0], struct ];
+      } else {
+        currentStruct = struct;
+      }
       currentResult = _result;
     } else if (type === 'a') {
       // array
@@ -99,7 +111,7 @@ export function compress(value: any, options?: TCompressOptions ): TCompressedDa
       } else if (structType === 'ao') {
         // if exists struct is array of object, convert structType to 'oa'
         structType = 'a';
-        k = ZERO_KEY_INDEX;
+        k = 0;
       }
 
       const _array: Array<any> = [];

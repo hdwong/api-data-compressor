@@ -34,3 +34,24 @@ test('array with nested elements', () => {
   const decompressed = decompress(JSON.parse(JSON.stringify(compressed)));
   expect(JSON.stringify(decompressed)).toEqual(JSON.stringify(data));
 });
+
+test('empty array and empty object - 1', () => {
+  const data = [[], {}, []];
+  const compressed = compress(data);
+  const decompressed = decompress(JSON.parse(JSON.stringify(compressed)));
+  expect(JSON.stringify(decompressed)).toEqual(JSON.stringify(data));
+});
+
+test('empty array and empty object - 2', () => {
+  const data = [[], {}, [[], {}]];
+  const compressed = compress(data);
+  const decompressed = decompress(JSON.parse(JSON.stringify(compressed)));
+  expect(JSON.stringify(decompressed)).toEqual(JSON.stringify(data));
+});
+
+test('empty object and empty array', () => {
+  const data = [{}, [], { a: 1 }, { a: [] }, { a: { b: 2 } }, { a: [ 1 ]}];
+  const compressed = compress(data);
+  const decompressed = decompress(JSON.parse(JSON.stringify(compressed)));
+  expect(JSON.stringify(decompressed)).toEqual(JSON.stringify(data));
+});

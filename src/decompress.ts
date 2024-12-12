@@ -27,11 +27,18 @@ export function decompress<T = any>(data: TCompressedData): T {
         isMixedObject = true;
         const first = value[0];
         const firstIsEmptyObject = isEmptyObject(first);
-        structType = firstIsEmptyObject ? structType[1] : structType[0];
         if (firstIsEmptyObject) {
           // trim first element
           value.shift();
         }
+        if (structType === 'ao') {
+          // get the correct struct
+          struct = firstIsEmptyObject ? struct[1] : struct[0];
+        }
+        // change struct type to 'o' or 'a'
+        structType = firstIsEmptyObject ? structType[1] : structType[0];
+      } else if (structType === 'a') {
+        struct = struct[0];
       }
       if (structType === 'o') {
         // object
@@ -53,7 +60,7 @@ export function decompress<T = any>(data: TCompressedData): T {
         const _result: Array<any> = [];
         if (value.length) {
           value.forEach((v: any, i: number) => {
-            _result[i] = _decompress(v, struct[isMixedObject ? ZERO_KEY_INDEX : 0]);
+            _result[i] = _decompress(v, struct);
           });
         }
         return _result;

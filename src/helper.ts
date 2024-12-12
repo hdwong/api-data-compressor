@@ -57,24 +57,31 @@ export function isEmptyObject(value: any) {
 
 /**
  * get object type
+ *   [...] - a
+ *   {...} - o
+ *   [[...], {...}] - ao
+ *   [{...}, [...]} - oa
  * @param struct - the object to check
  * @returns 'o' if struct is pure object,
  *    'a' if struct is array,
- *    'oa' if struct is object after array,
- *    'ao' if struct is array after object
+ *    'oa' if struct is object then array,
+ *    'ao' if struct is array then object
  */
 export function getStructType(struct: any) {
   if (!isObjectOrArray(struct)) {
     return false;
   }
   if (Array.isArray(struct)) {
-    return 'a';
+    if (typeof struct[1] === 'undefined') {
+      return 'a';
+    }
+    return 'ao';
   }
   const zeroKeyIndex = Object.keys(struct).indexOf(ZERO_KEY_INDEX);
   if (zeroKeyIndex === -1) {
     return 'o';
   }
-  return zeroKeyIndex === 0 ? 'ao' : 'oa';
+  return 'oa';
 }
 
 /**
@@ -103,7 +110,7 @@ export function mergeStruct(a: Record<string, any>, b: Record<string, any>) {
   if (Array.isArray(a)) {
     // if a and b are both arrays, return a
     // if a is array and b is object, return b
-    return Array.isArray(b) ? a : b;
+    return Array.isArray(b) && a.length >= b.length ? a : b;
   }
   const _a: Record<string, any> = Object.assign({}, a);
   const keys = Object.keys(_a);
